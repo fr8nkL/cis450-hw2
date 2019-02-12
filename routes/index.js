@@ -112,17 +112,35 @@ router.get('/reco/:movieId', function(req, res) {
       console.log('get recommendations error: ', err);
     }
     else {
-      results = [];
-      var lim = int( TOTAL / min(rows.length,10) );
-      for(var i = 0; i < Math.min(rows.length,9); i++){
-        
+      // rows contain the genres of the movie with id=key
+      for (var i in rows){
+        console.log(rows[i].genre)
       }
-
-      rows.push({'title':'iTitle', 'genre':'iGenre'})
-      res.json(rows);
-      res.json([
-        {'title':'iTitle', 'genre':'iGenre'}
-      ]);
+      console.log(rows.length);
+      var results = [];
+      var lim = Math.floor( TOTAL / Math.min(rows.length,10) );
+      console.log(lim);
+      for(var i = 0; i < Math.min(rows.length-1,9); i++){
+        console.log(rows[i].genre);
+        query = "SELECT title, genre " + 
+                "FROM Movies M, Genres G " + 
+                "WHERE M.id=G.movie_id AND M.id<>\"" + key + "\" AND G.genre=\"" + rows[i].genre + "\" " + 
+                "ORDER BY RAND() " + 
+                "LIMIT " + lim + ";";
+        connection.query(query, function(err,rows,fields){
+          if (err){
+            response.send({err:err});
+          }
+          for (var j in rows){
+            results.push(rows[j]);
+          }
+          console.log(results);
+          // response.json(rows);
+        });
+      }
+      //TODO: add last genre
+      console.log(results);
+      res.json(results);
     }
   });
 });

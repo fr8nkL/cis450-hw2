@@ -100,18 +100,19 @@ app.controller('recoController', function($scope, $http) {
       method: "GET"
     })
     request.success(function(response) {
-      $scope.whetherShowReco = true;
       console.log('res len = ',response.length);
       console.log(response);
-      if(response.length >= 1){
-        $scope.recoResults = response;
-      }
-      else{
-        var text ='{"title":"No matching id found!","genre":"Please re-enter"}';
-        errMesg = JSON.parse(text);
-        console.log(errMesg.title);
-        $scope.recoResults = errMesg;
-      }
+      $scope.whetherShowReco = true;
+      $scope.recoResults = response;
+      // if(response.length >= 1){
+      //   $scope.recoResults = response;
+      // }
+      // else{
+      //   var text ='{"title":"No matching id found!","genre":"Please re-enter"}';
+      //   errMesg = JSON.parse(text);
+      //   console.log(errMesg.title);
+      //   $scope.recoResults = errMesg;
+      // }
     });
     request.error(function(err) {
       console.log("recommendation error: ", err);
